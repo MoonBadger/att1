@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SeaBattleField {
-    public final int SIZE = 10;
+    public final int SIZE = 10, LARGEST_DECK = 4;
     private boolean[][] fieldsAttacked = new boolean[SIZE][SIZE],
                         fieldsShips = new boolean[SIZE][SIZE];
-    private int[] decks = new int[4];
+    private int[] decks = new int[LARGEST_DECK];
 
     private static class Point {
         public int x, y;
@@ -37,29 +37,41 @@ public class SeaBattleField {
         VOID, ATTACKED_VOID, SHIP, ATTACKED_SHIP
     }
 
+    public static class FieldIsAlreadyAttacked extends Exception {
+        public FieldIsAlreadyAttacked() {}
+    }
+
     public SeaBattleField() {
-        fillArray(fieldsAttacked, false);
-        fillArray(fieldsShips, false);
-        for (int i = 0; i < 4; i++) {
-            decks[i] = 0;
-        }
+        defaultStartFunction();
     }
 
     //-----------------------
 
-    public boolean fire(int x, int y) {
-        return true;
+    public boolean fire(int x, int y) throws FieldIsAlreadyAttacked {
+        if(fieldsAttacked[x][y]) throw new FieldIsAlreadyAttacked();
+        fieldsAttacked[x][y] = true;
+        destroyShipFunction(x, y);
+        return fieldsShips[x][y];
     }
 
     public boolean isWin() {
+        for (int x = 0; x < SIZE; x++) {
+            for (int y = 0; y < SIZE; y++) {
+                if(getFieldType(x, y) == fieldType.SHIP) return false;
+            }
+        }
         return true;
     }
 
     public boolean isCorrectPlacement() {
+        for (int i = 0; i < LARGEST_DECK; i++) {
+            if(decks[i] != LARGEST_DECK - i) return false;
+        }
         return true;
     }
 
     public boolean setShip(int x, int y, int deck, boolean orientation) {
+        if(deck > LARGEST_DECK) return false;
         int dx = orientation ? deck : 0;
         int dy = orientation ? 0 : deck;
         if(orientation) {
@@ -73,7 +85,7 @@ public class SeaBattleField {
                 if(! isEmptyEnvironment(x, y + i)) return false;
             }
         }
-        if(decks[deck - 1] == (5 - deck)) return false;
+        if(decks[deck - 1] == (LARGEST_DECK - deck + 1)) return false;
         if(orientation) {
             for (int i = 0; i < dx; i++) {
                 fieldsShips[x + i][y] = true;
@@ -96,30 +108,35 @@ public class SeaBattleField {
     }
 
     public void deleteShip(int x, int y) {
-
+        for(Point p : getShipPointsList(x, y)) {
+            fieldsShips[p.x][p.y] = false;
+        }
     }
 
     public void clear() {
-
+        defaultStartFunction();
     }
 
     //----------
 
     private void destroyShipFunction(int x, int y) {
-
+        ArrayList<Point> list = getShipPointsList(x, y),
+                roundList = new ArrayList<>();
+        for(Point p : list)  {
+            if(getFieldType(p.x, p.y) == fieldType.SHIP) return;
+            roundList.addAll(getRoundPoint(p.x, p.y));
+        }
+        for(Point p : roundList) {
+            if(inBound(p.x, p.y)) {
+                fieldsAttacked[p.x][p.y] = true;
+            }
+        }
     }
 
     private boolean isEmptyEnvironment(int x, int y) {
-        int[] arr = new int[]{1, -1, 0};
-        for(int i : arr)
-            for(int j : arr) {
-                if(i == 0 && j == 0) continue;
-                if(inBound(x + i,y + j)) {
-                    if (fieldsShips[x + i][y + j]) {
-                        return false;
-                    }
-                }
-            }
+        for(Point point : getRoundPoint(x, y)) {
+            if(fieldsShips[point.x][point.y]) return false;
+        }
         return true;
     }
 
@@ -168,10 +185,18 @@ public class SeaBattleField {
             for(int j : arr) {
                 if(i == 0 && j == 0) continue;
                 if(inBound(x + i,y + j)) {
-                    Point point = new Point(x, y);
+                    Point point = new Point(x + i, y + j);
                     if(! listContainsPoint(list, point)) list.add(point);
                 }
             }
         return list;
+    }
+
+    private void defaultStartFunction() {
+        fillArray(fieldsAttacked, false);
+        fillArray(fieldsShips, false);
+        for (int i = 0; i < LARGEST_DECK; i++) {
+            decks[i] = 0;
+        }
     }
 }

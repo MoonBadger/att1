@@ -4,9 +4,8 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
 	    SeaBattleField field = new SeaBattleField();
-	    field.setShip(3,4,4,false);
-	    System.out.println(StringConverter.fieldToString(field));
+
     }
 }
