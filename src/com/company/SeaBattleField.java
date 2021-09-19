@@ -48,16 +48,18 @@ public class SeaBattleField {
     public boolean setShip(int x, int y, int deck, boolean orientation) {
         int dx = orientation ? deck : 0;
         int dy = orientation ? 0 : deck;
-        if(! inBound(x + dx - 1, y + dy - 1)) return false;
         if(orientation) {
+            if(! inBound(x + dx - 1, y)) return false;
             for (int i = 0; i < dx; i++) {
                 if(! isEmptyEnvironment(x + i, y)) return false;
             }
         } else {
+            if(! inBound(x, y + dy - 1)) return false;
             for (int i = 0; i < dy; i++) {
                 if(! isEmptyEnvironment(x, y + i)) return false;
             }
         }
+        if(decks[deck - 1] == (5 - deck)) return false;
         if(orientation) {
             for (int i = 0; i < dx; i++) {
                 fieldsShips[x + i][y] = true;
@@ -87,11 +89,10 @@ public class SeaBattleField {
 
     }
 
+    //----------
     private void destroyShipFunction(int x, int y) {
 
     }
-
-    //----------
 
     private boolean isEmptyEnvironment(int x, int y) {
         int[] arr = new int[]{1, -1, 0};
