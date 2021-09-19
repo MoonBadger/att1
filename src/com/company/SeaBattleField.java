@@ -1,8 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.zip.ZipError;
+import java.util.List;
 
 public class SeaBattleField {
     public final int SIZE = 10;
@@ -16,6 +15,21 @@ public class SeaBattleField {
         public Point(int x, int y) {
             this.x = x;
             this.y = y;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(! (obj instanceof Point)) return false;
+            Point point = (Point) obj;
+            return (this.x == point.x) && (this.y == point.y);
+        }
+
+        @Override
+        public String toString() {
+            return "Point{" +
+                    "x=" + x +
+                    ", y=" + y +
+                    '}';
         }
     }
 
@@ -90,6 +104,7 @@ public class SeaBattleField {
     }
 
     //----------
+
     private void destroyShipFunction(int x, int y) {
 
     }
@@ -114,8 +129,21 @@ public class SeaBattleField {
         return bx && by;
     }
 
+    private void getShipPointsList(int x, int y, ArrayList<Point> list) {
+        if(! inBound(x, y)) return;
+        if(fieldsShips[x][y] && ! listContainsPoint(list, new Point(x, y))) {
+            list.add(new Point(x, y));
+            getShipPointsList(x + 1, y, list);
+            getShipPointsList(x - 1, y, list);
+            getShipPointsList(x, y + 1, list);
+            getShipPointsList(x, y - 1, list);
+        }
+    }
+
     private ArrayList<Point> getShipPointsList(int x, int y) {
-        return null;
+        ArrayList<Point> list = new ArrayList<>();
+        getShipPointsList(x, y, list);
+        return list;
     }
 
     private void fillArray(boolean[][] arr, boolean val) {
@@ -124,5 +152,26 @@ public class SeaBattleField {
                 arr[i][j] = val;
             }
         }
+    }
+
+    private boolean listContainsPoint(List<Point> list, Point point) {
+        for (Point p : list) {
+            if(p.equals(point)) return true;
+        }
+        return false;
+    }
+
+    private ArrayList<Point> getRoundPoint(int x, int y) {
+        ArrayList<Point> list = new ArrayList<>();
+        int[] arr = new int[]{1, -1, 0};
+        for(int i : arr)
+            for(int j : arr) {
+                if(i == 0 && j == 0) continue;
+                if(inBound(x + i,y + j)) {
+                    Point point = new Point(x, y);
+                    if(! listContainsPoint(list, point)) list.add(point);
+                }
+            }
+        return list;
     }
 }
