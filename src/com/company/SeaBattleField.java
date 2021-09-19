@@ -108,13 +108,19 @@ public class SeaBattleField {
     }
 
     public void deleteShip(int x, int y) {
-        for(Point p : getShipPointsList(x, y)) {
+        ArrayList<Point> list = getShipPointsList(x, y);
+        for(Point p : list) {
             fieldsShips[p.x][p.y] = false;
         }
+        decks[list.size() - 1]--;
     }
 
     public void clear() {
         defaultStartFunction();
+    }
+
+    public int getDeckNumber(int deck) {
+        return decks[deck - 1];
     }
 
     //----------
