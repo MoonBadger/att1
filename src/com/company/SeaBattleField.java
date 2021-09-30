@@ -33,7 +33,7 @@ public class SeaBattleField {
         }
     }
 
-    public enum fieldType {
+    public enum FieldType {
         VOID, ATTACKED_VOID, SHIP, ATTACKED_SHIP
     }
 
@@ -57,7 +57,7 @@ public class SeaBattleField {
     public boolean isWin() {
         for (int x = 0; x < SIZE; x++) {
             for (int y = 0; y < SIZE; y++) {
-                if(getFieldType(x, y) == fieldType.SHIP) return false;
+                if(getFieldType(x, y) == FieldType.SHIP) return false;
             }
         }
         return true;
@@ -99,11 +99,11 @@ public class SeaBattleField {
         return true;
     }
 
-    public fieldType getFieldType(int x, int y) {
-        if(fieldsShips[x][y] && ! fieldsAttacked[x][y]) return fieldType.SHIP;
-        if(fieldsShips[x][y] && fieldsAttacked[x][y]) return fieldType.ATTACKED_SHIP;
-        if(! fieldsShips[x][y] && ! fieldsAttacked[x][y]) return fieldType.VOID;
-        if(! fieldsShips[x][y] && fieldsAttacked[x][y]) return fieldType.ATTACKED_VOID;
+    public FieldType getFieldType(int x, int y) {
+        if(fieldsShips[x][y] && ! fieldsAttacked[x][y]) return FieldType.SHIP;
+        if(fieldsShips[x][y] && fieldsAttacked[x][y]) return FieldType.ATTACKED_SHIP;
+        if(! fieldsShips[x][y] && ! fieldsAttacked[x][y]) return FieldType.VOID;
+        if(! fieldsShips[x][y] && fieldsAttacked[x][y]) return FieldType.ATTACKED_VOID;
         return null;
     }
 
@@ -129,7 +129,7 @@ public class SeaBattleField {
         ArrayList<Point> list = getShipPointsList(x, y),
                 roundList = new ArrayList<>();
         for(Point p : list)  {
-            if(getFieldType(p.x, p.y) == fieldType.SHIP) return;
+            if(getFieldType(p.x, p.y) == FieldType.SHIP) return;
             roundList.addAll(getRoundPoint(p.x, p.y));
         }
         for(Point p : roundList) {

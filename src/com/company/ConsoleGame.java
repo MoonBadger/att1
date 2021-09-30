@@ -14,6 +14,11 @@ public class ConsoleGame {
             readCommand();
             if(! hide) System.out.println(StringConverter.fieldToString(game.player1));
         }
+        if(!hide) {
+            for (int i = 0; i < 30; i++) {
+                System.out.println();
+            }
+        }
         game.next();
         while(! game.isCorrectPlacement()) {
             if(! hide)System.out.println("PLAYER 2");
@@ -26,7 +31,7 @@ public class ConsoleGame {
         game.next();
         while(! game.isWin()) {
             System.out.println(StringConverter.fieldToString(game.getCurrentToAttack()));
-            System.out.println(game.isFirstPlayer() ? "PLAYER 1" : "PLAYER 2");
+            System.out.println(StringColor.ANSI_RESET + (game.isFirstPlayer() ? "PLAYER 1" : "PLAYER 2"));
             boolean b  = readCommand();
             if(!b) game.next();
         }

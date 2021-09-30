@@ -32,7 +32,7 @@ public class Game {
         return getCurrent().setShip(x, y, deck, orientation);
     }
 
-    public SeaBattleField.fieldType getFieldType(int x, int y) {
+    public SeaBattleField.FieldType getFieldType(int x, int y) {
         return getCurrent().getFieldType(x, y);
     }
 
