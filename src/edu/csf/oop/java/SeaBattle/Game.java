@@ -1,4 +1,4 @@
-package com.company;
+package edu.csf.oop.java.SeaBattle;
 
 public class Game {
     public SeaBattleField player1, player2;

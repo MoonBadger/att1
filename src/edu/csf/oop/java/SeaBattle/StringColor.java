@@ -1,4 +1,4 @@
-package com.company;
+package edu.csf.oop.java.SeaBattle;
 
 public class StringColor {
     public static final String ANSI_RESET = "\u001B[0m";

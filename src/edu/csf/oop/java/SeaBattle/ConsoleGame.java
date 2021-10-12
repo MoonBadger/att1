@@ -1,4 +1,4 @@
-package com.company;
+package edu.csf.oop.java.SeaBattle;
 
 import java.util.Scanner;
 

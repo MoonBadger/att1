@@ -1,4 +1,4 @@
-package com.company;
+package edu.csf.oop.java.SeaBattle;
 
 public class StringConverter {
     private static boolean hide = false;
@@ -21,6 +21,7 @@ public class StringConverter {
             case SHIP -> hide ? (StringColor.ANSI_WHITE + ".") : (StringColor.ANSI_GREEN + "#") + StringColor.ANSI_RESET;
             case ATTACKED_SHIP -> StringColor.ANSI_RED + "X" + StringColor.ANSI_RESET;
             case ATTACKED_VOID -> StringColor.ANSI_YELLOW + "*" + StringColor.ANSI_RESET;
+            default -> "";
         };
     }
 

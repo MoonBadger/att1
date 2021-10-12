@@ -1,13 +1,15 @@
-package com.company;
+package edu.csf.oop.java.SeaBattle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class SeaBattleField {
-    public final int SIZE = 10, LARGEST_DECK = 4;
+    public final int SIZE = 10, LARGEST_DECK = 4, MAX_MINE = 1, MAX_MINESWEEPER = 1;
     private boolean[][] fieldsAttacked = new boolean[SIZE][SIZE],
                         fieldsShips = new boolean[SIZE][SIZE];
     private int[] decks = new int[LARGEST_DECK];
+    private ArrayList<Point> listMine = new ArrayList<>(), listMinesweeper = new ArrayList<>();
 
     private static class Point {
         public int x, y;
@@ -34,7 +36,22 @@ public class SeaBattleField {
     }
 
     public enum FieldType {
-        VOID, ATTACKED_VOID, SHIP, ATTACKED_SHIP
+        VOID,
+        ATTACKED_VOID,
+        SHIP,
+        ATTACKED_SHIP,
+        NINE,
+        ATTACKED_MINE,
+        MINESWEEPER,
+        ATTACKED_MINESWEEPER
+    }
+
+    public enum AttackResult {
+        MISS,
+        HIT,
+        MINE_ACTIVATION,
+        MINESWEEPER_ACTIVATION,
+        ERROR
     }
 
     public static class FieldIsAlreadyAttacked extends Exception {
@@ -99,6 +116,26 @@ public class SeaBattleField {
         return true;
     }
 
+    public boolean setMinesweeper(int x, int y) {
+        if(!inBound(x, y) ||
+                !isEmptyEnvironment(x,y) ||
+                listMinesweeper.size() == MAX_MINESWEEPER) return false;
+        listMinesweeper.add(new Point(x,y));
+        return true;
+    }
+
+    public boolean setMine(int x, int y) {
+        if(!inBound(x, y) ||
+                !isEmptyEnvironment(x, y) ||
+                listMinesweeper.size() == MAX_MINE) return false;
+        listMine.add(new Point(x, y));
+        return true;
+    }
+
+    public void randomMineDeactivate() {
+        mineDeactivate(listMine.get(new Random().nextInt(listMine.size())));
+    }
+
     public FieldType getFieldType(int x, int y) {
         if(fieldsShips[x][y] && ! fieldsAttacked[x][y]) return FieldType.SHIP;
         if(fieldsShips[x][y] && fieldsAttacked[x][y]) return FieldType.ATTACKED_SHIP;
@@ -141,7 +178,9 @@ public class SeaBattleField {
 
     private boolean isEmptyEnvironment(int x, int y) {
         for(Point point : getRoundPoint(x, y)) {
-            if(fieldsShips[point.x][point.y]) return false;
+            if(fieldsShips[point.x][point.y] ||
+            listContainsPoint(listMine, point) ||
+            listContainsPoint(listMinesweeper, point)) return false;
         }
         return true;
     }
@@ -203,6 +242,16 @@ public class SeaBattleField {
         fillArray(fieldsShips, false);
         for (int i = 0; i < LARGEST_DECK; i++) {
             decks[i] = 0;
+        }
+    }
+
+    private void mineDeactivate(Point point) {
+        if(listContainsPoint(listMine, point)) {
+            for(Point p : getRoundPoint(point.x, point.y)) {
+                fieldsAttacked[p.x][p.y] = true;
+            }
+            fieldsAttacked[point.x][point.y] = true;
+            listMine.remove(point);
         }
     }
 }
