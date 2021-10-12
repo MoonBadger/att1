@@ -1,4 +1,6 @@
-package edu.csf.oop.java.SeaBattle;
+package edu.csf.oop.java.SeaBattle.consoleInterface;
+
+import edu.csf.oop.java.SeaBattle.logic.Game;
 
 import java.util.Scanner;
 

@@ -1,4 +1,4 @@
-package edu.csf.oop.java.SeaBattle;
+package edu.csf.oop.java.SeaBattle.logic;
 
 import java.util.ArrayList;
 import java.util.List;

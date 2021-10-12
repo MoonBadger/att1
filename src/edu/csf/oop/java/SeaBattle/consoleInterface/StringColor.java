@@ -1,4 +1,4 @@
-package edu.csf.oop.java.SeaBattle;
+package edu.csf.oop.java.SeaBattle.consoleInterface;
 
 public class StringColor {
     public static final String ANSI_RESET = "\u001B[0m";

@@ -1,4 +1,4 @@
-package edu.csf.oop.java.SeaBattle;
+package edu.csf.oop.java.SeaBattle.logic;
 
 public class Game {
     public SeaBattleField player1, player2;
